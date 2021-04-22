@@ -5,6 +5,9 @@ defmodule Jeopardy.Games.Game do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
+
+  @required_fields ~w(name user_id)a
+
   schema "games" do
     field :name, :string
 
@@ -16,7 +19,7 @@ defmodule Jeopardy.Games.Game do
   @doc false
   def changeset(game, attrs) do
     game
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, @required_fields)
+    |> validate_required(@required_fields)
   end
 end

@@ -11,7 +11,7 @@ defmodule JeopardyWeb.UserController do
     render(conn, "index.json", users: users)
   end
 
-  def create(conn, %{"user" => user_params}) do #TODO Figure out wtf to do with the credentials and email field
+  def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params |> Map.put("credential", %{"email" => Map.get(user_params, "email")})) do
       conn
       |> put_status(:created)
