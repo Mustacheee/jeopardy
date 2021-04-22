@@ -21,6 +21,5 @@ defmodule Jeopardy.Accounts.Credential do
     |> cast(attrs, [:email])
     |> validate_required([:email])
     |> unique_constraint(:email)
-    |> IO.inspect
   end
 end

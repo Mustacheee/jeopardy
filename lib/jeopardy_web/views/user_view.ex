@@ -19,4 +19,11 @@ defmodule JeopardyWeb.UserView do
       email: user.email,
     }
   end
+
+  def render("missing_param.json", %{params: params}) do
+    %{
+      error: "Missing Params",
+      params: params,
+    }
+  end
 end

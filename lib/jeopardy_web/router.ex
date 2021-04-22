@@ -1,15 +1,23 @@
 defmodule JeopardyWeb.Router do
   use JeopardyWeb, :router
+  import JeopardyWeb.Plugs.Authentication
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :parse_identity_token
   end
 
   scope "/api", JeopardyWeb do
     pipe_through :api
     get "/", TestController, :index
 
-    resources "/users", UserController, except: [:new, :edit]
+    resources "/users", UserController, only: [:create]
+  end
+
+  scope "/api", JeopardyWeb do
+    pipe_through [:api, :ensure_authenticated]
+
+    resources "/users", UserController, except: [:create, :new, :edit]
   end
 
   # Enables LiveDashboard only for development

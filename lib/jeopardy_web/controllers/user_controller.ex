@@ -20,6 +20,12 @@ defmodule JeopardyWeb.UserController do
     end
   end
 
+  def create(conn, user_params) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> render("missing_param.json", params: user_params)
+  end
+
   def show(conn, %{"id" => id}) do
     with {:ok, user} <- Accounts.get_user(id) do
       render(conn, "show.json", user: user)

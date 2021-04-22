@@ -2,7 +2,6 @@ defmodule Jeopardy.Accounts do
   @moduledoc """
   The Accounts context.
   """
-
   import Ecto.Query, warn: false
   alias Jeopardy.Repo
 
@@ -137,6 +136,20 @@ defmodule Jeopardy.Accounts do
   end
 
   @doc """
+  Gets a single credential or nil if it doesn't exist.
+
+  ## Examples
+
+      iex> get_credential(123)
+      %Credential{}
+
+      iex> get_credential(456)
+      nil
+
+  """
+  def get_credential(id), do: Repo.get(Credential, id)
+
+  @doc """
   Gets a single credential.
 
   Raises `Ecto.NoResultsError` if the Credential does not exist.
@@ -216,4 +229,14 @@ defmodule Jeopardy.Accounts do
   def change_credential(%Credential{} = credential, attrs \\ %{}) do
     Credential.changeset(credential, attrs)
   end
+
+  @doc """
+    Get the user associated with a credenetials record
+  """
+  @spec get_user_from_credential(%Credential{} | any) :: %User{} | nil
+  def get_user_from_credential(%Credential{user_id: user_id}) when is_binary(user_id) do
+    Repo.get(User, user_id)
+  end
+
+  def get_user_from_credential(_), do: nil
 end
