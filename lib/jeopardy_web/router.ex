@@ -17,8 +17,11 @@ defmodule JeopardyWeb.Router do
   scope "/api", JeopardyWeb do
     pipe_through [:api, :ensure_authenticated]
 
+    resources "/games", GameController, except: [:new, :edit] do
+      resources "/categories", CategoryController, except: [:new, :edit]
+    end
+
     resources "/users", UserController, except: [:create, :new, :edit]
-    resources "/games", GameController, except: [:new, :edit]
   end
 
   # Enables LiveDashboard only for development

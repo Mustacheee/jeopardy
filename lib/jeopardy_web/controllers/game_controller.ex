@@ -12,7 +12,9 @@ defmodule JeopardyWeb.GameController do
   end
 
   def create(%Plug.Conn{assigns: %{current_user: %{id: user_id}}} = conn, %{"game" => game_params}) do
-    with {:ok, %Game{} = game} <- Games.create_game(Map.put(game_params, "user_id", user_id)) do
+    game_params = Map.put(game_params, "user_id", user_id)
+
+    with {:ok, %Game{} = game} <- Games.create_game(game_params) do
       conn
       |> put_status(:created)
       |> render("show.json", game: game)
