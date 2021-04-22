@@ -28,6 +28,9 @@ defmodule JeopardyWeb.Plugs.Authentication do
     assign(conn, :current_user, user)
   end
 
+  @doc """
+    Ensure that the connection has an authenticated user or else halt.
+  """
   def ensure_authenticated(conn, _opts) do
     case conn do
       %{assigns: %{current_user: %User{}}} ->
