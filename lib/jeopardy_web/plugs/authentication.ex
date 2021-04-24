@@ -16,6 +16,7 @@ defmodule JeopardyWeb.Plugs.Authentication do
   def parse_identity_token(conn, _opts) do
     user =
       conn
+      |> IO.inspect
       |> extract_token
       |> case do
         token when is_binary(token) ->

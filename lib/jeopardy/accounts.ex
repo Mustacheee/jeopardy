@@ -122,6 +122,11 @@ defmodule Jeopardy.Accounts do
     User.changeset(user, attrs)
   end
 
+  def get_user_by(attr) do
+    Repo.get_by(User, attr)
+    |> Repo.preload(:credential)
+  end
+
   @doc """
   Returns the list of credentials.
 
