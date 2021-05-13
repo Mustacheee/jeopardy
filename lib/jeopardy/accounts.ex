@@ -123,7 +123,8 @@ defmodule Jeopardy.Accounts do
   end
 
   def get_user_by(attr) do
-    Repo.get_by(User, attr)
+    User
+    |> Repo.get_by(attr)
     |> Repo.preload(:credential)
   end
 

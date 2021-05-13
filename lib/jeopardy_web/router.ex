@@ -23,6 +23,8 @@ defmodule JeopardyWeb.Router do
       resources "/categories", CategoryController, except: [:new, :edit]
     end
 
+    options "/games", GameController, :nothing
+
     resources "/users", UserController, except: [:create, :new, :edit]
   end
 
