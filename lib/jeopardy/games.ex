@@ -21,6 +21,12 @@ defmodule Jeopardy.Games do
     Repo.all(Game)
   end
 
+  def get_game(id) do
+    Game
+    |> Repo.get(id)
+    |> Repo.preload([:categories])
+  end
+
   @doc """
   Gets a single game.
 
@@ -35,7 +41,11 @@ defmodule Jeopardy.Games do
       ** (Ecto.NoResultsError)
 
   """
-  def get_game!(id), do: Repo.get!(Game, id)
+  def get_game!(id) do
+    Game
+    |> Repo.get!(id)
+    |> Repo.preload([:categories])
+  end
 
   @doc """
   Creates a game.
@@ -149,7 +159,15 @@ defmodule Jeopardy.Games do
     %Category{}
     |> Category.changeset(attrs)
     |> Repo.insert()
+    |> broadcast_category()
   end
+
+  defp broadcast_category({:ok, %Category{game_id: game_id} = category}) do
+    JeopardyWeb.Endpoint.broadcast("game:#{game_id}", "new_category", %{category: category})
+    {:ok, category}
+  end
+
+  defp broadcast_category(category), do: category |> IO.inspect()
 
   @doc """
   Updates a category.

@@ -2,6 +2,9 @@ defmodule Jeopardy.Games.Game do
   use Ecto.Schema
   import Ecto.Changeset
   alias Jeopardy.Accounts.User
+  alias Jeopardy.Games.Category
+
+  @derive {Jason.Encoder, only: [:id, :name, :categories]}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -12,6 +15,7 @@ defmodule Jeopardy.Games.Game do
     field :name, :string
 
     belongs_to :user, User
+    has_many :categories, Category
 
     timestamps()
   end

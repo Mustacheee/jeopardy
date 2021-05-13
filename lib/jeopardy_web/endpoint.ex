@@ -11,7 +11,7 @@ defmodule JeopardyWeb.Endpoint do
   ]
 
   socket "/socket", JeopardyWeb.UserSocket,
-    websocket: true,
+    web: true,
     longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
@@ -48,5 +48,6 @@ defmodule JeopardyWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+  plug CORSPlug, origin: "*"
   plug JeopardyWeb.Router
 end

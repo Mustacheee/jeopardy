@@ -3,7 +3,6 @@ defmodule JeopardyWeb.Router do
   import JeopardyWeb.Plugs.Authentication
 
   pipeline :api do
-    plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
     plug :parse_identity_token
   end
@@ -12,7 +11,6 @@ defmodule JeopardyWeb.Router do
     pipe_through :api
 
     post "/login", LoginController, :login
-    options "/login", LoginController, :nothing
     resources "/users", UserController, only: [:create]
   end
 
@@ -22,8 +20,6 @@ defmodule JeopardyWeb.Router do
     resources "/games", GameController, except: [:new, :edit] do
       resources "/categories", CategoryController, except: [:new, :edit]
     end
-
-    options "/games", GameController, :nothing
 
     resources "/users", UserController, except: [:create, :new, :edit]
   end

@@ -11,11 +11,15 @@ defmodule JeopardyWeb.ErrorView do
   # the template name. For example, "404.json" becomes
   # "Not Found".
   def template_not_found(template, _assigns) do
-    %{errors: %{detail: Phoenix.Controller.status_message_from_template(template)}}
+    %{
+      status: "error",
+      errors: %{detail: Phoenix.Controller.status_message_from_template(template)}
+    }
   end
 
   def render("missing_param.json", %{params: params}) do
     %{
+      status: "error",
       error: "Missing Params",
       params: params,
     }

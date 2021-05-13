@@ -21,4 +21,16 @@ defmodule JeopardyWeb.FallbackController do
     |> put_view(JeopardyWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:show, nil}), do: call(conn, {:error, :not_found})
+
+  def call(conn, err) do
+    IO.inspect("Crazy error occurred: ")
+    IO.inspect(err)
+
+    conn
+    |> put_status(:server_error)
+    |> put_view(JeopardyWeb.ErrorView)
+    |> render(:"500")
+  end
 end

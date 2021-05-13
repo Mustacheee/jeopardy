@@ -17,13 +17,14 @@ defmodule JeopardyWeb.GameController do
     with {:ok, %Game{} = game} <- Games.create_game(game_params) do
       conn
       |> put_status(:created)
-      |> render("show.json", game: game)
+      |> render("show.json", game: Map.put(game, :categories, []))
     end
   end
 
   def show(conn, %{"id" => id}) do
-    game = Games.get_game!(id)
-    render(conn, "show.json", game: game)
+    with {:show, %Game{} = game} <- {:show, Games.get_game(id)} do
+      render(conn, "show.json", game: game)
+    end
   end
 
   def update(conn, %{"id" => id, "game" => game_params}) do
