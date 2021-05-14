@@ -10,7 +10,11 @@ defmodule JeopardyWeb.Endpoint do
     signing_salt: "zGSZA05C"
   ]
 
-  socket "/socket", JeopardyWeb.UserSocket,
+  socket "/socket", JeopardyWeb.AuthenticatedSocket,
+    web: true,
+    longpoll: false
+
+    socket "/opensocket", JeopardyWeb.UnauthenticatedSocket,
     web: true,
     longpoll: false
 

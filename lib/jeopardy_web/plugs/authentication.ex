@@ -8,6 +8,7 @@ defmodule JeopardyWeb.Plugs.Authentication do
 
   # Type of authentication token being used
   @token_type "Bearer"
+  def token_type, do: @token_type
 
   @doc """
     Extract the user based on the authorization token provided.
@@ -16,10 +17,11 @@ defmodule JeopardyWeb.Plugs.Authentication do
   def parse_identity_token(conn, _opts) do
     user =
       conn
+      |> get_req_header("authorization")
       |> extract_token()
       |> case do
         token when is_binary(token) ->
-          get_user_by_token(token)
+          Accounts.get_user_by_token(token)
 
         _ ->
           nil
@@ -45,29 +47,20 @@ defmodule JeopardyWeb.Plugs.Authentication do
     end
   end
 
-  defp extract_token(conn) do
-    conn
-    |> get_req_header("authorization")
-    |> case do
-      [header_value] ->
-        header_value
-        |> String.split("#{@token_type} ")
-        |> case do
-          ["", token] ->
-            token
+  @spec extract_token(any) :: nil | binary
+  def extract_token([value]), do: extract_token(value)
 
-          _ ->
-            nil
-        end
+  def extract_token(value) when is_binary(value) and value != "" do
+    value
+    |> String.split("#{@token_type} ")
+    |> case do
+      ["", token] ->
+        token
 
       _ ->
         nil
     end
   end
 
-  defp get_user_by_token(token) do
-    token
-    |> Accounts.get_credential()
-    |> Accounts.get_user_from_credential()
-  end
+  def extract_token(_), do: nil
 end

@@ -245,4 +245,10 @@ defmodule Jeopardy.Accounts do
   end
 
   def get_user_from_credential(_), do: nil
+
+  def get_user_by_token(token) do
+    token
+    |> get_credential()
+    |> get_user_from_credential()
+  end
 end

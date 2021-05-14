@@ -1,4 +1,4 @@
-defmodule JeopardyWeb.UserSocket do
+defmodule JeopardyWeb.UnauthenticatedSocket do
   use Phoenix.Socket
 
   ## Channels

@@ -4,6 +4,10 @@ defmodule JeopardyWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :authenticated do
+    plug :ensure_authenticated
     plug :parse_identity_token
   end
 
@@ -15,7 +19,7 @@ defmodule JeopardyWeb.Router do
   end
 
   scope "/api", JeopardyWeb do
-    pipe_through [:api, :ensure_authenticated]
+    pipe_through [:api, :authenticated]
 
     resources "/games", GameController, except: [:new, :edit] do
       resources "/categories", CategoryController, except: [:new, :edit]
