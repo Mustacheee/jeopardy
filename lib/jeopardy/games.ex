@@ -159,15 +159,15 @@ defmodule Jeopardy.Games do
     %Category{}
     |> Category.changeset(attrs)
     |> Repo.insert()
-    |> broadcast_category()
+    |> broadcast_category("new_category")
   end
 
-  defp broadcast_category({:ok, %Category{game_id: game_id} = category}) do
-    JeopardyWeb.Endpoint.broadcast("game:#{game_id}", "new_category", %{category: category})
+  defp broadcast_category({:ok, %Category{game_id: game_id} = category}, event_name) do
+    JeopardyWeb.Endpoint.broadcast("game:#{game_id}", event_name, %{category: category})
     {:ok, category}
   end
 
-  defp broadcast_category(category), do: category |> IO.inspect()
+  defp broadcast_category(category, _event_name), do: category |> IO.inspect()
 
   @doc """
   Updates a category.
@@ -200,7 +200,9 @@ defmodule Jeopardy.Games do
 
   """
   def delete_category(%Category{} = category) do
-    Repo.delete(category)
+    category
+    |> Repo.delete()
+    |> broadcast_category("delete_category")
   end
 
   @doc """
