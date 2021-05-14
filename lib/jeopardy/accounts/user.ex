@@ -4,6 +4,9 @@ defmodule Jeopardy.Accounts.User do
   import Jeopardy.Helpers.ModelValidators, only: [email_validator: 2]
 
   alias Jeopardy.Accounts.Credential
+  alias Jeopardy.Games.Game
+
+  @derive {Jason.Encoder, only: [:id, :username, :first_name, :last_name, :email]}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -18,6 +21,7 @@ defmodule Jeopardy.Accounts.User do
     field :email, :string
 
     has_one :credential, Credential
+    has_many :games, Game
 
     timestamps()
   end

@@ -1,9 +1,10 @@
 defmodule JeopardyWeb.UserChannel do
   use JeopardyWeb, :channel
+  alias Jeopardy.Games
 
-  def join(conn, params, socket) do
-    IO.inspect(params)
+  def join("user:" <> _user_id, _params, %{assigns: %{user: user}} = socket) do
+    games = Games.get_user_games(user)
 
-    {:ok, %{test: "123"}, socket}
+    {:ok, %{user: user, games: games}, socket}
   end
 end

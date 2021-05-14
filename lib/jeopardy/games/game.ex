@@ -4,7 +4,7 @@ defmodule Jeopardy.Games.Game do
   alias Jeopardy.Accounts.User
   alias Jeopardy.Games.Category
 
-  @derive {Jason.Encoder, only: [:id, :name, :categories]}
+  @derive {Jason.Encoder, only: [:id, :name]}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id

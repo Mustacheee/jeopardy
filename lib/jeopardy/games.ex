@@ -7,6 +7,7 @@ defmodule Jeopardy.Games do
   alias Jeopardy.Repo
 
   alias Jeopardy.Games.Game
+  alias Jeopardy.Accounts.User
 
   @doc """
   Returns the list of games.
@@ -111,6 +112,13 @@ defmodule Jeopardy.Games do
   def change_game(%Game{} = game, attrs \\ %{}) do
     Game.changeset(game, attrs)
   end
+
+  def get_user_games(%User{id: user_id}), do: get_user_games(user_id)
+  def get_user_games(user_id) when is_binary(user_id) do
+    from(g in Game, where: g.user_id == ^user_id)
+    |> Repo.all()
+  end
+  def get_user_games(_), do: []
 
   alias Jeopardy.Games.Category
 
