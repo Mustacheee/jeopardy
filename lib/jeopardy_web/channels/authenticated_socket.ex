@@ -23,5 +23,5 @@ defmodule JeopardyWeb.AuthenticatedSocket do
   def connect(_params, _socket, _connect_info), do: :error
 
   @impl true
-  def id(_socket), do: nil
+  def id(socket), do: "user_socket:#{socket.assigns.user.id}"
 end
