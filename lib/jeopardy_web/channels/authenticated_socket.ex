@@ -4,6 +4,7 @@ defmodule JeopardyWeb.AuthenticatedSocket do
   alias Jeopardy.Accounts
 
   channel "user:*", JeopardyWeb.UserChannel
+  channel "game:*", JeopardyWeb.GameChannel
 
   @impl true
   def connect(%{"apiToken" => apiToken}, socket, _connect_info) do

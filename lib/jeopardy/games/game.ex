@@ -4,8 +4,6 @@ defmodule Jeopardy.Games.Game do
   alias Jeopardy.Accounts.User
   alias Jeopardy.Games.Category
 
-  @derive {Jason.Encoder, only: [:id, :name]}
-
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -25,5 +23,15 @@ defmodule Jeopardy.Games.Game do
     game
     |> cast(attrs, @required_fields)
     |> validate_required(@required_fields)
+  end
+
+  defimpl Jason.Encoder, for: Jeopardy.Games.Game do
+    def encode(game, opts) do
+      game
+      |> Jeopardy.Repo.preload(:categories)
+      |> Map.take([:id, :name, :categories])
+      |> Enum.into(%{})
+      |> Jason.Encode.map(opts)
+    end
   end
 end

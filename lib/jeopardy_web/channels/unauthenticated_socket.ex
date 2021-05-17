@@ -2,7 +2,7 @@ defmodule JeopardyWeb.UnauthenticatedSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "game:*", JeopardyWeb.GameChannel
+  # channel "game:*", JeopardyWeb.GameChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

@@ -19,6 +19,7 @@ defmodule JeopardyWeb.Plugs.Authentication do
       conn
       |> get_req_header("authorization")
       |> extract_token()
+      |> IO.inspect()
       |> case do
         token when is_binary(token) ->
           Accounts.get_user_by_token(token)

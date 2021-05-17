@@ -7,4 +7,9 @@ defmodule JeopardyWeb.UserChannel do
 
     {:ok, %{user: user, games: games}, socket}
   end
+
+  def handle_in(event, params, socket) do
+    broadcast!(socket, event, params)
+    {:reply, {:ok, %{test: "testssss"}}, socket}
+  end
 end

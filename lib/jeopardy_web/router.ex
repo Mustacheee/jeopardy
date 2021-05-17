@@ -7,8 +7,8 @@ defmodule JeopardyWeb.Router do
   end
 
   pipeline :authenticated do
-    plug :ensure_authenticated
     plug :parse_identity_token
+    plug :ensure_authenticated
   end
 
   scope "/api", JeopardyWeb do
@@ -25,6 +25,7 @@ defmodule JeopardyWeb.Router do
       resources "/categories", CategoryController, except: [:new, :edit]
     end
 
+    resources "/questions", QuestionController, except: [:new, :edit]
     resources "/users", UserController, except: [:create, :new, :edit]
   end
 

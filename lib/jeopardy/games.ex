@@ -26,6 +26,7 @@ defmodule Jeopardy.Games do
     Game
     |> Repo.get(id)
     |> Repo.preload([:categories])
+    |> IO.inspect()
   end
 
   @doc """
@@ -115,7 +116,7 @@ defmodule Jeopardy.Games do
 
   def get_user_games(%User{id: user_id}), do: get_user_games(user_id)
   def get_user_games(user_id) when is_binary(user_id) do
-    from(g in Game, where: g.user_id == ^user_id)
+    from(g in Game, where: g.user_id == ^user_id, preload: :categories)
     |> Repo.all()
   end
   def get_user_games(_), do: []
@@ -134,6 +135,8 @@ defmodule Jeopardy.Games do
   def list_categories do
     Repo.all(Category)
   end
+
+  def get_category(id), do: Repo.get!(Category, id)
 
   @doc """
   Gets a single category.
@@ -224,5 +227,123 @@ defmodule Jeopardy.Games do
   """
   def change_category(%Category{} = category, attrs \\ %{}) do
     Category.changeset(category, attrs)
+  end
+
+  def get_category_details(category_id) do
+    category_id
+    |> get_category()
+    |> Repo.preload(:questions)
+    |> IO.inspect()
+  end
+
+  alias Jeopardy.Games.Question
+
+  @doc """
+  Returns the list of questions.
+
+  ## Examples
+
+      iex> list_questions()
+      [%Question{}, ...]
+
+  """
+  def list_questions do
+    Repo.all(Question)
+  end
+
+  @doc """
+  Gets a single question.
+
+  Raises `Ecto.NoResultsError` if the Question does not exist.
+
+  ## Examples
+
+      iex> get_question!(123)
+      %Question{}
+
+      iex> get_question!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_question!(id), do: Repo.get!(Question, id)
+
+  @doc """
+  Creates a question.
+
+  ## Examples
+
+      iex> create_question(%{field: value})
+      {:ok, %Question{}}
+
+      iex> create_question(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_question(attrs \\ %{}) do
+    %Question{}
+    |> Question.changeset(attrs)
+    |> Repo.insert()
+    |> broadcast_question("new_question")
+  end
+
+  defp broadcast_question({:ok, %Question{category_id: category_id} = question}, event_name) do
+    category_id
+    |> get_category()
+    |> case do
+      %Category{game_id: game_id} ->
+        JeopardyWeb.Endpoint.broadcast("game:#{game_id}", event_name, %{question: question})
+      _ ->
+        nil
+    end
+    {:ok, question}
+  end
+
+  defp broadcast_question(question, _event_name), do: question |> IO.inspect()
+
+  @doc """
+  Updates a question.
+
+  ## Examples
+
+      iex> update_question(question, %{field: new_value})
+      {:ok, %Question{}}
+
+      iex> update_question(question, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_question(%Question{} = question, attrs) do
+    question
+    |> Question.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a question.
+
+  ## Examples
+
+      iex> delete_question(question)
+      {:ok, %Question{}}
+
+      iex> delete_question(question)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_question(%Question{} = question) do
+    Repo.delete(question)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking question changes.
+
+  ## Examples
+
+      iex> change_question(question)
+      %Ecto.Changeset{data: %Question{}}
+
+  """
+  def change_question(%Question{} = question, attrs \\ %{}) do
+    Question.changeset(question, attrs)
   end
 end
