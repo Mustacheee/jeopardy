@@ -25,7 +25,7 @@ defmodule Jeopardy.Games do
   def get_game(id) do
     Game
     |> Repo.get(id)
-    |> Repo.preload([:categories])
+    |> Repo.preload([:categories, :config])
     |> IO.inspect()
   end
 
@@ -233,7 +233,6 @@ defmodule Jeopardy.Games do
     category_id
     |> get_category()
     |> Repo.preload(:questions)
-    |> IO.inspect()
   end
 
   alias Jeopardy.Games.Question
@@ -345,5 +344,101 @@ defmodule Jeopardy.Games do
   """
   def change_question(%Question{} = question, attrs \\ %{}) do
     Question.changeset(question, attrs)
+  end
+
+  alias Jeopardy.Games.GameConfig
+
+  @doc """
+  Returns the list of game_configs.
+
+  ## Examples
+
+      iex> list_game_configs()
+      [%GameConfig{}, ...]
+
+  """
+  def list_game_configs do
+    Repo.all(GameConfig)
+  end
+
+  @doc """
+  Gets a single game_config.
+
+  Raises `Ecto.NoResultsError` if the Game config does not exist.
+
+  ## Examples
+
+      iex> get_game_config!(123)
+      %GameConfig{}
+
+      iex> get_game_config!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_game_config!(id), do: Repo.get!(GameConfig, id)
+
+  @doc """
+  Creates a game_config.
+
+  ## Examples
+
+      iex> create_game_config(%{field: value})
+      {:ok, %GameConfig{}}
+
+      iex> create_game_config(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_game_config(attrs \\ %{}) do
+    %GameConfig{}
+    |> GameConfig.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a game_config.
+
+  ## Examples
+
+      iex> update_game_config(game_config, %{field: new_value})
+      {:ok, %GameConfig{}}
+
+      iex> update_game_config(game_config, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_game_config(%GameConfig{} = game_config, attrs) do
+    game_config
+    |> GameConfig.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a game_config.
+
+  ## Examples
+
+      iex> delete_game_config(game_config)
+      {:ok, %GameConfig{}}
+
+      iex> delete_game_config(game_config)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_game_config(%GameConfig{} = game_config) do
+    Repo.delete(game_config)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking game_config changes.
+
+  ## Examples
+
+      iex> change_game_config(game_config)
+      %Ecto.Changeset{data: %GameConfig{}}
+
+  """
+  def change_game_config(%GameConfig{} = game_config, attrs \\ %{}) do
+    GameConfig.changeset(game_config, attrs)
   end
 end

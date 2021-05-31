@@ -2,7 +2,7 @@ defmodule Jeopardy.Games.Game do
   use Ecto.Schema
   import Ecto.Changeset
   alias Jeopardy.Accounts.User
-  alias Jeopardy.Games.Category
+  alias Jeopardy.Games.{Category, GameConfig}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -14,6 +14,7 @@ defmodule Jeopardy.Games.Game do
 
     belongs_to :user, User
     has_many :categories, Category
+    has_one :config, GameConfig
 
     timestamps()
   end
@@ -25,11 +26,12 @@ defmodule Jeopardy.Games.Game do
     |> validate_required(@required_fields)
   end
 
+  # TODO: this is BUTT! Fix this by utilizing the view or something, shit
   defimpl Jason.Encoder, for: Jeopardy.Games.Game do
     def encode(game, opts) do
       game
-      |> Jeopardy.Repo.preload(:categories)
-      |> Map.take([:id, :name, :categories])
+      |> Jeopardy.Repo.preload([:categories, :config])
+      |> Map.take([:id, :name, :categories, :config])
       |> Enum.into(%{})
       |> Jason.Encode.map(opts)
     end

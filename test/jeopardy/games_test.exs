@@ -181,4 +181,65 @@ defmodule Jeopardy.GamesTest do
       assert %Ecto.Changeset{} = Games.change_question(question)
     end
   end
+
+  describe "game_configs" do
+    alias Jeopardy.Games.GameConfig
+
+    @valid_attrs %{column_count: 42, qs_per_category: 42}
+    @update_attrs %{column_count: 43, qs_per_category: 43}
+    @invalid_attrs %{column_count: nil, qs_per_category: nil}
+
+    def game_config_fixture(attrs \\ %{}) do
+      {:ok, game_config} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Games.create_game_config()
+
+      game_config
+    end
+
+    test "list_game_configs/0 returns all game_configs" do
+      game_config = game_config_fixture()
+      assert Games.list_game_configs() == [game_config]
+    end
+
+    test "get_game_config!/1 returns the game_config with given id" do
+      game_config = game_config_fixture()
+      assert Games.get_game_config!(game_config.id) == game_config
+    end
+
+    test "create_game_config/1 with valid data creates a game_config" do
+      assert {:ok, %GameConfig{} = game_config} = Games.create_game_config(@valid_attrs)
+      assert game_config.column_count == 42
+      assert game_config.qs_per_category == 42
+    end
+
+    test "create_game_config/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Games.create_game_config(@invalid_attrs)
+    end
+
+    test "update_game_config/2 with valid data updates the game_config" do
+      game_config = game_config_fixture()
+      assert {:ok, %GameConfig{} = game_config} = Games.update_game_config(game_config, @update_attrs)
+      assert game_config.column_count == 43
+      assert game_config.qs_per_category == 43
+    end
+
+    test "update_game_config/2 with invalid data returns error changeset" do
+      game_config = game_config_fixture()
+      assert {:error, %Ecto.Changeset{}} = Games.update_game_config(game_config, @invalid_attrs)
+      assert game_config == Games.get_game_config!(game_config.id)
+    end
+
+    test "delete_game_config/1 deletes the game_config" do
+      game_config = game_config_fixture()
+      assert {:ok, %GameConfig{}} = Games.delete_game_config(game_config)
+      assert_raise Ecto.NoResultsError, fn -> Games.get_game_config!(game_config.id) end
+    end
+
+    test "change_game_config/1 returns a game_config changeset" do
+      game_config = game_config_fixture()
+      assert %Ecto.Changeset{} = Games.change_game_config(game_config)
+    end
+  end
 end

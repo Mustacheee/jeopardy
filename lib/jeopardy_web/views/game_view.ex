@@ -20,7 +20,8 @@ defmodule JeopardyWeb.GameView do
     %{
       id: game.id,
       name: game.name,
-      categories: Map.get(game, :categories, [])
+      categories: Map.get(game, :categories, []),
+      config: Map.get(game, :config, nil)
     }
   end
 end

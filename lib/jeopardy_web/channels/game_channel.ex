@@ -2,7 +2,7 @@ defmodule JeopardyWeb.GameChannel do
   use Phoenix.Channel
 
   alias Jeopardy.Games
-  alias Jeopardy.Games.Game
+  alias Jeopardy.Games.{Game, GameConfig}
 
   def join("game:" <> game_id, params, socket) do
     game_id

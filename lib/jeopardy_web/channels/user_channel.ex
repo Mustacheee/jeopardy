@@ -5,7 +5,7 @@ defmodule JeopardyWeb.UserChannel do
   def join("user:" <> _user_id, _params, %{assigns: %{user: user}} = socket) do
     games = Games.get_user_games(user)
 
-    {:ok, %{user: user, games: games}, socket}
+    {:ok, %{user: user, games: games, event: "user_join"}, socket}
   end
 
   def handle_in(event, params, socket) do
